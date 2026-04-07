@@ -16,7 +16,7 @@ Total time: 4:00 (with 15-second Q&A buffer within the 5-minute limit)
 
 ## Slide 2: Problem & Dataset — Jonathan Chamberlin (45 seconds)
 
-"We pulled our data from the CDC's U.S. Chronic Disease Indicators database. It's the federal government's official chronic disease tracking system, so the data is well-documented and covers every state. Each row is one state. Each column is a health metric — either a disease outcome like heart disease mortality, or a risk factor like smoking or poverty rates."
+"We pulled our data from the CDC's U.S. Chronic Disease Indicators database, hosted on data.gov. It's the federal government's official chronic disease tracking system, so the data is well-documented and covers every state. Each row is one state. Each column is a health metric — either a disease outcome like heart disease mortality, or a risk factor like smoking or poverty rates."
 
 [POINT TO MAP]
 
@@ -48,9 +48,9 @@ Total time: 4:00 (with 15-second Q&A buffer within the 5-minute limit)
 
 [POINT TO CHART — red bars]
 
-"The red bars show the relative strength of each predictor for heart disease. Poverty's effect is nearly four times larger than smoking's. That matters because public health campaigns focus heavily on individual behavior — quit smoking, eat better, exercise more. But our data suggests the economic environment matters more at the state level."
+"The red bars show the relative strength of each predictor for heart disease. Poverty's effect is more than four times larger than smoking's. That matters because public health campaigns focus heavily on individual behavior — quit smoking, eat better, exercise more. But our data suggests the economic environment matters more at the state level."
 
-"Diabetes tells a different story. The blue bars show that obesity is the dominant driver for diabetes, not poverty. Different diseases, different drivers. Min Yu will wrap us up with what this means."
+"Diabetes has a different pattern. Obesity and poverty contribute almost equally as drivers, unlike heart disease where poverty dominates. Different diseases, different balance of drivers. Min Yu will wrap us up with what this means."
 
 ---
 
