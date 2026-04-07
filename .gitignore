@@ -27,6 +27,7 @@ Thumbs.db
 .env
 *.pem
 *.key
+!ds2500_presentation.key
 client_secret*
 
 # Jupyter
