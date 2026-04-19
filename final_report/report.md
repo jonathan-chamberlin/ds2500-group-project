@@ -3,12 +3,13 @@
 **DS2500: Team Project Final Report**
 
 **Team Members:**
-- Jonathan Chamberlin (chamberlin.j@northeastern.edu)
-- Min Yu Huang (huang.miny@northeastern.edu)
-- Anuhya Mandava (mandava.a@northeastern.edu)
-- Tsion Teklaeb (teklaeb.t@northeastern.edu)
 
-**Section:** 1
+- Jonathan Chamberlin (chamberlin.j@northeastern.edu)
+- Min Yu Huang (huang.minyu@northeastern.edu)
+- Anuhya Mandava (mandava.an@northeastern.edu)
+- Tsion Tekleab (tekleab.t@northeastern.edu)
+
+**Section:** 1  
 **Date:** April 21, 2026
 
 ---
@@ -29,7 +30,7 @@ Heart disease is the leading cause of death in the United States, and the four c
 
 ### Dataset Overview
 
-- **Source:** U.S. Chronic Disease Indicators (CDI), data.cdc.gov, hosted on data.gov. https://catalog.data.gov/dataset/u-s-chronic-disease-indicators
+- **Source:** U.S. Chronic Disease Indicators (CDI), data.cdc.gov, hosted on data.gov ([catalog.data.gov/dataset/u-s-chronic-disease-indicators](https://catalog.data.gov/dataset/u-s-chronic-disease-indicators))
 - **Time Period:** 2015-2022
 - **Size:** 309,216 records × 35 columns in the raw dataset. After cleaning to one value per state per indicator, the working table is 51 rows (50 states plus the District of Columbia) across 27 health indicators.
 - **Format:** CSV
@@ -93,8 +94,8 @@ The single strongest predictor is poverty. Its standardized coefficient is rough
 
 To test whether that gap survives when we strip out the correlated predictors, we ran a two-feature partial model with only poverty and smoking. Poverty's standardized coefficient drops from its seven-feature value to 0.54, smoking's rises to 0.34, and the model still explains 63 percent of state-level heart disease mortality (R² = 0.628). Poverty is now about 1.6x smoking rather than 4x, but it still dominates. The bigger gap in the full seven-feature model is partly shared variance between poverty and food insecurity (pairwise r = 0.83) getting allocated to poverty; the partial regression is the more honest comparison.
 
-![Figure 2](figures/slide-06.png)
-*Figure 2. Standardized regression coefficients for seven predictors of heart disease mortality (red) and diabetes prevalence (blue). Poverty is the largest coefficient for heart disease; obesity is the largest for diabetes.*
+![Figure 2](figures/fig_coefficients_heart_disease.png)
+*Figure 2. Standardized regression coefficients for the seven-feature linear model predicting state-level heart disease mortality (n = 51 states). Poverty is the largest coefficient (β = 13.45), roughly 4× smoking's (β = 3.17). Obesity, food insecurity, and HS completion fall in between.*
 
 ### Finding 2: Diabetes is obesity-driven, not poverty-driven
 
@@ -107,17 +108,17 @@ Geographically, the highest diabetes prevalence concentrates in the Southeast (W
 
 ### Finding 3: Tobacco use correlates with cancer and COPD, but explains less than expected
 
-For cancer and COPD we expected tobacco use to dominate. It correlates with both (r = 0.46 for cancer, r = 0.49 for COPD; see Figure 4) and both correlations are statistically significant, but tobacco alone explains only 21 percent of variation in cancer rates and 24 percent in COPD rates. That leaves roughly three-quarters of the between-state variation unaccounted for by tobacco use. The implication is that even for diseases with a well-known single-factor story, state-level outcomes are shaped by a wider set of inputs (air quality, occupational exposure, healthcare access, screening rates) that our current model does not capture.
+For cancer and COPD we expected tobacco use to dominate. It correlates with both (r = 0.46 for cancer, r = 0.57 for COPD; see Figure 4) and both correlations are highly significant (p < 0.0001), but tobacco alone explains only 22 percent of variation in cancer prevalence and 32 percent in COPD prevalence. That leaves roughly two-thirds to three-quarters of the between-state variation unaccounted for by tobacco use. The implication is that even for diseases with a well-known single-factor story, state-level outcomes are shaped by a wider set of inputs (air quality, occupational exposure, healthcare access, screening rates) that our current model does not capture.
 
-![Figure 4](figures/slide-07.png)
-*Figure 4. Tobacco use vs. cancer prevalence (left, r = 0.46) and tobacco use vs. COPD prevalence (right, r = 0.49) across U.S. states, with linear trend lines.*
+![Figure 4](figures/fig_tobacco_cancer_copd.png)
+*Figure 4. Tobacco use vs. cancer prevalence (left, r = 0.46, R² = 0.22) and tobacco use vs. COPD prevalence (right, r = 0.57, R² = 0.32) across U.S. states pooled across 2019–2022, with linear trend lines.*
 
 ### Finding 4: Alcohol and mental-health outcomes track specific social indicators
 
 For alcohol, per-capita alcohol consumption among people aged 14 and older was the strongest predictor of alcoholism outcomes (p = 0.0002). For mental health, the strongest predictor we found among the available indicators was postpartum depressive symptoms among women with a recent live birth (p = 0.0118). Both predictors are social indicators rather than clinical ones, which echoes the pattern from the heart-disease result. When you measure upstream social and demographic conditions, they correlate with downstream health outcomes at levels comparable to or greater than traditional clinical risk factors.
 
-![Figure 5](figures/slide-08.png)
-*Figure 5. Normalized rates of alcohol indicators (top) and mental-health indicators (bottom) in the U.S. for 2020. Per-capita alcohol consumption is the dominant alcohol indicator; depression among adults is the dominant mental-health indicator.*
+![Figure 5](figures/fig_alcohol_mental_indicators.png)
+*Figure 5. Normalized rates of alcohol indicators (top) and mental-health indicators (bottom) for the United States, 2020. Indicators are normalized to a common 0–1 scale (percent indicators by 100, per-capita alcohol consumption by 5 gallons). Per-capita alcohol consumption is the dominant alcohol indicator; depression among adults is the largest mental-health indicator, with postpartum depressive symptoms among the strongest predictors of state-level mental-health outcomes.*
 
 ### Conclusions
 
