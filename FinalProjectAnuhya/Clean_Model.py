@@ -19,7 +19,9 @@ from sklearn.preprocessing import LabelEncoder
 from matplotlib.patches import Patch
 from scipy import stats
 
-BASE_PATH = "C:\\Users\\anuhy\\DS2500\\FinalProject\\"
+import os
+
+BASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__))) + os.sep
 df = pd.read_csv(BASE_PATH + "U.S._Chronic_Disease_Indicators (1).csv")
 
 PREVALENCE_TYPES = ["crude prevalence", "age-adjusted prevalence"]
@@ -207,7 +209,54 @@ def get_average_prevalence_by_state(dataframe, year):
     return state_df
 
 
+def merge_state_indicator(dataframe, year, question, anchor_df, on="StateAbbr"):
+    """
+    Get state level data for a question and merge with an anchor dataframe.
+
+    Parameters: dataframe, dataframe
+                int, year
+                str, question
+                dataframe, anchor_df
+                str, on, join key
+
+    Returns: dataframe, merged result or None if too few rows
+    """
+    indicator_df = get_state_level_data(dataframe, year, question)
+    merged = pd.merge(indicator_df, anchor_df, on=on)
+    if len(merged) < 5:
+        return None
+    return merged
+
+
 def get_indicator_pvalues(dataframe, year):
+    """
+    For each indicator, average across DataValueTypes first, then compute
+    Pearson r and p-value against the average disease prevalence across states.
+
+    Parameters: dataframe, dataframe
+                int, year
+
+    Returns: dataframe, with columns Question, r, and pvalue
+    """
+    anchor_df = get_average_prevalence_by_state(dataframe, year)
+    questions = dataframe[
+        (dataframe["Stratification1"] == "Overall") &
+        (dataframe["YearStart"] == year)
+    ]["Question"].unique()
+
+    rows = []
+    for question in questions:
+        merged = merge_state_indicator(dataframe, year, question, anchor_df)
+        if merged is None:
+            continue
+        r, p = stats.pearsonr(merged["DataValue"], merged["AveragePrevalence"])
+        rows.append({"Question": question, "r": round(r, 3), "pvalue": round(p, 4)})
+
+    result = pd.DataFrame(rows).sort_values("pvalue")
+    return result
+
+
+
     """
     For each indicator, average across DataValueTypes first, then compute
     Pearson r and p-value against the average disease prevalence across states.
@@ -420,10 +469,8 @@ def plot_predictor_strength(dataframe, year, topic):
     plt.figure(figsize=(12, 7))
 
     for question in questions:
-        indicator_df = get_state_level_data(dataframe, year, question)
-        merged = pd.merge(indicator_df, anchor_df, on="StateAbbr")
-
-        if len(merged) < 5:
+        merged = merge_state_indicator(dataframe, year, question, anchor_df)
+        if merged is None:
             continue
 
         x = merged["DataValue"].values
@@ -467,10 +514,8 @@ def plot_state_scatter_per_indicator(dataframe, year, topic):
     ]["Question"].unique()
 
     for question in questions:
-        indicator_df = get_state_level_data(dataframe, year, question)
-        merged = pd.merge(indicator_df, anchor_df, on="StateAbbr")
-
-        if len(merged) < 5:
+        merged = merge_state_indicator(dataframe, year, question, anchor_df)
+        if merged is None:
             continue
 
         x = merged["DataValue"].values
@@ -961,7 +1006,7 @@ def plot_knn_regression_results(y_true, y_pred, topic):
              color="red", linestyle="--", label="Perfect prediction")
     plt.xlabel("Actual Disease Rate")
     plt.ylabel("Predicted Disease Rate")
-    plt.title(f"{topic} KNN Regressor: Predicted vs Actual (2022)")
+    plt.title(f"{topic} KNN Regressor: Predicted vs Actual")
     plt.legend(fontsize=8)
     plt.tight_layout()
     plt.savefig(BASE_PATH + f"{topic.replace(' ', '_')}_knn_regression.png")
@@ -987,7 +1032,7 @@ def plot_knn_classification_results(y_true, y_pred, topic):
                 xticklabels=labels, yticklabels=labels)
     plt.xlabel("Predicted")
     plt.ylabel("Actual")
-    plt.title(f"{topic} KNN Classifier: Confusion Matrix (2022)")
+    plt.title(f"{topic} KNN Classifier: Confusion Matrix")
     plt.tight_layout()
     plt.savefig(BASE_PATH + f"{topic.replace(' ', '_')}_knn_classifier.png")
     plt.show()
